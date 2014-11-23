@@ -9,10 +9,10 @@ var post =
 }];
 
 
-exposts.list = function(req, res){
+exports.list = function(req, res){
 	res.send(post);
 };
 
-exposts.create = function(req, res){
+exports.create = function(req, res){
 
 };
