@@ -5,12 +5,32 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var posts = require('./routes/posts');
 
 var app = express();
+
+mongoose.connect('mongodb://localhost/booklog2');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback () {
+  console.log('MongoDB: connected.');   
+});
+
+var postSchema = new mongoose.Schema({
+    title: String,
+    content: String
+});
+
+app.db = {
+    model: {
+        Post: mongoose.model('post', postSchema),
+    }
+};
 
 // view engine setup
 app.set('views',path.join(__dirname, 'views'));
