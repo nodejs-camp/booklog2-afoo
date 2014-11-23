@@ -47,6 +47,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
+// middleware stophere if without next
+app.get('/1/post', function(req, res, next) {
+    console.log('stop here');
+    next();
+});
+
 app.get('/1/post', posts.list);
 app.post('/1/post', posts.create);
 
