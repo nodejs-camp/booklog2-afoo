@@ -3,8 +3,6 @@ var events = require('events');
 exports.list = function(req, res){
 	var model = req.app.db.model.Post;
 
-	var model = req.app.db.model.Post;
-
 	model
 			.find({})
 			.exec(function(err, posts) {
@@ -22,16 +20,13 @@ exports.create = function(req, res){
 	var content = req.query.content;
 
 	workflow.outcome = {
-			success = false,
-			errfor = {}
+			success: false,
+			errfor: {}
 	};
 
-	workflow.on ('validation', function(){
-		subject = req.body.subject;
-		content = req.body.content;
-
-		if(subject.length === 0)
-				workflow.outcome.errfor.subject = '這是必填欄位';
+	workflow.on ('validation', function() {
+		if(title.length === 0)
+				workflow.outcome.errfor.title = '這是必填欄位';
 
 		if(content.length === 0)
 				workflow.outcome.errfor.content = '這是必填欄位';
@@ -54,8 +49,8 @@ exports.create = function(req, res){
 		workflow.emit('response');
 	});
 
-	workflow.on('response', funciton() {
-		res.send(workflow.outcome)
+	workflow.on('response', function() {
+		res.send(workflow.outcome);
 	});
 
 	workflow.emit('validation');
