@@ -57,5 +57,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
+app.get('/1/post', posts.list);
+app.post('/1/post', post.create);
 
 module.exports = app;
