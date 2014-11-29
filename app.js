@@ -110,7 +110,7 @@ app.post('/1/post', posts.create);
 app.get('/login', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/',
-                                        failureRedirect: '/login'}
+                                        failureRedirect: '/login/fail'}
     )
 );
 
