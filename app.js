@@ -24,7 +24,7 @@ db.once('open', function callback () {
 });
 
 var postSchema = new mongoose.Schema({
-    title: String,
+    subject: String,
     content: String
 });
 
