@@ -17,11 +17,14 @@ exports.list = function(req, res){
 		  	});
 		  	res.end();
   		});
-  		/*.exec(function(err, post) {
-			req.app.db.model.Post.populate(post, {path: 'userId'}, function(err, posts) {
+  		/*.exec(function(err, posts) {
+			req.app.db.model.Post.populate(posts, {path: 'userId'}, function(err, posts) {
 				
-				console.log( req.app.db.model.Post.count('你很糟') );
-				
+				//console.log( req.app.db.model.Post.count('你很糟') );
+				for(i=0; i<posts.length; i++) {
+					posts[i].wchars = req.app.db.model.Post.count(posts[i].content);
+				}
+
 				res.send({
 					posts: posts
 				});
@@ -52,6 +55,7 @@ exports.create = function(req, res){
 	var title = req.body.title;
 	var content = req.body.content;
 
+console.log('USER: ' + req.user);
 	var userId = req.user._id;
 
 	workflow.outcome = {
