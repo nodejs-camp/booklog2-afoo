@@ -8,6 +8,7 @@ var http = require('http');
 var mongoose = require('mongoose');
 var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -24,17 +25,30 @@ db.once('open', function callback () {
 });
 
 var postSchema = new mongoose.Schema({
+    //userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Uesr' },
     title: String,
-    content: String
+    content: String,
+    wchars: { type: Number, default: 0 }
 });
 
 var userSchema = new mongoose.Schema({
-    username: { type: String, unique: true },
-    displayname: { type: String, unique: true },
-    email: { type: String, unique: true },
-    timeCreated: { type: Date, default: Date.now },
-    facebook: {}
+    username: { type: String, unique: true, select: false },
+    displayname: { type: String, unique: true, select: true },
+    email: { type: String, unique: true, select: false },
+    timeCreated: { type: Date, default: Date.now, select: false },
+    facebook: { type: Object, select: false}
 });
+
+//postSchema.index( { title: 1 } );
+//postSchema.index( { title: "text" } );
+//postSchema.index( { content: "text" } );
+
+//postSchema.plugin(require('./schema/countPlugin'));
+
+/*postSchema.methods.sync = function() {
+    console.log('sync');
+}
+*/
 
 app.db = {
     model: {
@@ -55,6 +69,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({ secret: 'study hard' }));
+
 /** add passport initialize */
 app.use(passport.initialize());
 app.use(passport.session());
@@ -65,6 +81,11 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
+});
+
+app.use(function(req, res, next) {
+    res.locals.user = req.user;
+    next();
 });
 
 app.use('/', routes);

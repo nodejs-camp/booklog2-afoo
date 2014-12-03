@@ -5,12 +5,29 @@ exports.list = function(req, res){
 
   	model
   		.find({})
+  		//.populate('userId')
+  		/*.aggregate([
+  			{	
+  				$project: { _id: 1, title: 1, content: 1, userId: 1 }
+  			}
+  		])*/
   		.exec(function(err, posts) {
 		  	res.send({
 		  		posts: posts
 		  	});
 		  	res.end();
   		});
+  		/*.exec(function(err, post) {
+			req.app.db.model.Post.populate(post, {path: 'userId'}, function(err, posts) {
+				
+				console.log( req.app.db.model.Post.count('你很糟') );
+				
+				res.send({
+					posts: posts
+				});
+				res.end();
+			});
+		});*/
 };
 
 exports.listByTag = function(req, res){
@@ -19,6 +36,8 @@ exports.listByTag = function(req, res){
 
   	model
   		.find({title: tag})
+  		//.find({ $text: { $search: tag } })
+  		//.populate('userId')
   		.exec(function(err, posts) {
 		  	res.send({
 		  		posts: posts
@@ -33,7 +52,7 @@ exports.create = function(req, res){
 	var title = req.body.title;
 	var content = req.body.content;
 
-console.log('USER: ' + req.user);
+	var userId = req.user._id;
 
 	workflow.outcome = {
 		success: false,
@@ -55,6 +74,7 @@ console.log('USER: ' + req.user);
 
 	workflow.on('savePost', function() {
 		var post = new model({
+			userId: userId,
 			title: title,
 			content: content
 		});
