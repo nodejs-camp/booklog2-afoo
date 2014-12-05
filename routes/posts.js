@@ -5,7 +5,7 @@ exports.list = function(req, res){
 
   	model
   		.find({})
-  		//.populate('userId')
+  		.populate('userId')
   		/*.aggregate([
   			{	
   				$project: { _id: 1, title: 1, content: 1, userId: 1 }
@@ -38,9 +38,9 @@ exports.listByTag = function(req, res){
 	var tag = req.params.tag;
 
   	model
-  		.find({title: tag})
-  		//.find({ $text: { $search: tag } })
-  		//.populate('userId')
+  		//.find({ title: tag })
+  		.find({ $text: { $search: tag } })
+  		.populate('userId')
   		.exec(function(err, posts) {
 		  	res.send({
 		  		posts: posts
@@ -55,7 +55,7 @@ exports.create = function(req, res){
 	var title = req.body.title;
 	var content = req.body.content;
 
-console.log('USER: ' + req.user);
+//console.log('USER: ' + req.user);
 	var userId = req.user._id;
 
 	workflow.outcome = {

@@ -29,6 +29,8 @@ block content
       <% _.each(posts, function(post) { %>
       .well(style='margin-top: 20px;')
         h1 <%= post.title %>
+        h2 <%= post.displayName %>
+        h3 <%= post.content %>
       <% }); %>
 
     script(type='text/template', id='tmpl-results')
