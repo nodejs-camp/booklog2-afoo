@@ -29,20 +29,20 @@ var postSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String,
     content: String,
-    wchars: { type: Number, default: 0 }
+    //wchars: { type: Number, default: 0 }
 });
 
 var userSchema = new mongoose.Schema({
     username: { type: String, unique: true, select: false },
-    displayname: { type: String, unique: true, select: true },
+    displayname: { type: String, unique: true },
     email: { type: String, unique: true, select: false },
     timeCreated: { type: Date, default: Date.now, select: false },
-    facebook: { type: Object, select: false}
+    facebook: { type: Object, select: false }
 });
 
-//postSchema.index( { title: 1 } );
-//postSchema.index( { title: "text" } );
-//postSchema.index( { content: "text" } );
+postSchema.index( { title: 1 } );
+postSchema.index( { title: "text" } );
+postSchema.index( { content: "text" } );
 
 //postSchema.plugin(require('./schema/countPlugin'));
 
@@ -70,7 +70,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({ secret: 'study hard' }));
+app.use(session({ secret: 'booklog store' }));
 
 /** add passport initialize */
 app.use(passport.initialize());
@@ -79,18 +79,6 @@ app.use(passport.session());
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-app.use(function(req, res, next) {
-    res.locals.user = req.user;
-    next();
-});
-
-app.use('/', routes);
-app.use('/users', users);
 
 passport.use(new FacebookStrategy({
     clientID: '645016182285791',
@@ -102,7 +90,7 @@ passport.use(new FacebookStrategy({
             if (!user) {
                 var obj = {
                     username: profile.username,
-                    displpayname: profile.displayname,
+                    displayname: profile.displayname,
                     email: '',
                     facebook: profile
                 };
@@ -118,11 +106,19 @@ passport.use(new FacebookStrategy({
     }
 ));
 
-// middleware stophere if without next
-app.get('/1/post', function(req, res, next) {
-    console.log('stop here');
+app.use(function(req, res, next) {
+    res.locals.user = req.user;
     next();
 });
+
+app.use('/', routes);
+app.use('/users', users);
+
+// middleware stophere if without next
+/*app.get('/1/post', function(req, res, next) {
+    console.log('stop here');
+    next();
+});*/
 
 /** REST APIs */
 app.get('/1/post', posts.list);

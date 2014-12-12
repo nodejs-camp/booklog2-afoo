@@ -6,31 +6,12 @@ exports.list = function(req, res){
   	model
   		.find({})
   		.populate('userId')
-  		/*.aggregate([
-  			{	
-  				$project: { _id: 1, title: 1, content: 1, userId: 1 }
-  			}
-  		])*/
   		.exec(function(err, posts) {
 		  	res.send({
 		  		posts: posts
 		  	});
 		  	res.end();
   		});
-  		/*.exec(function(err, posts) {
-			req.app.db.model.Post.populate(posts, {path: 'userId'}, function(err, posts) {
-				
-				//console.log( req.app.db.model.Post.count('你很糟') );
-				for(i=0; i<posts.length; i++) {
-					posts[i].wchars = req.app.db.model.Post.count(posts[i].content);
-				}
-
-				res.send({
-					posts: posts
-				});
-				res.end();
-			});
-		});*/
 };
 
 exports.listByTag = function(req, res){
@@ -38,7 +19,7 @@ exports.listByTag = function(req, res){
 	var tag = req.params.tag;
 
   	model
-  		//.find({ title: tag })
+  		.find({ title: tag })
   		.find({ $text: { $search: tag } })
   		.populate('userId')
   		.exec(function(err, posts) {
