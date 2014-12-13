@@ -19,8 +19,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	var workflow = new events.EventEmitter();
 	var postId = req.params.postId;
 	var posts = req.app.db.model.Post;
-	var paymentId = ;
-	var payerId = ;
+
 
 	workflow.outcome = {
 		success: false
@@ -28,7 +27,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 
 	workflow.on('validate', function(){
 		paypal_api.configure(config_opts);
-	};
+	});
 
 	workflow.on('excutePayment', function(){
 		paaypa_api.configure(config_opts);

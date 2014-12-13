@@ -29,14 +29,7 @@ block content
       <% _.each(posts, function(post) { %>
       .well(style='margin-top: 20px;')
         h1 <%= post.title %>
-        h2 <%= post.userId.displayname %>
-        p words: <%= post.wachrs %> 
-        <% if (post.orders.length === 0) { %>
-        button.btn.btn-default(data-purchase-for!='<%= post._id %>') 購買全文
-        <% } else { %>
-        a.btn.btn-danger(href!='<%= post.orders[0].paypal.link[1].href %>', target='_blank') 線上付款
-        <% } %>
-        p content: <%= post.content %>
+
       <% }); %>
 
     script(type='text/template', id='tmpl-results')
