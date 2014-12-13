@@ -28,20 +28,28 @@ db.once('open', function callback () {
   console.log('MongoDB: connected.');   
 });
 
-/** design post data structure **/
+// design post data structure
 var postSchema = new mongoose.Schema({
     title: String,
     content: String
 });
 
-/** set a db model? **/
+// design user data structure
+var userSchema = new mongoose.Schema({
+    username: { type: String, unique: true },
+    displayName: { type: String, unique: true },
+    email: { type: String, unique: true },
+    timeCreated: { type: Date, default: Date.now },
+    facebook: {}
+});
+
+// set a db model? 
 app.db = {
     model: {
         Post: mongoose.model('post', postSchema),
+        User: mongoose.model('Usesr', userSchema)
     }
 };
-
-app.hello = 'yes';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -72,7 +80,23 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://localhost:3000/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done){
-        return done(null, profile);
+        app.db.users.findOne({"facebook._jason.id": profile.id}, function(err, user){
+            if(!user){
+                var obj = {
+                    username: profile.username,
+                    displayName: profile.displayName,
+                    email: '',
+                    facebook: profile
+                };
+
+                var doc = new app.db.users(obj);
+                doc.save();
+
+                user = doc;
+            }
+
+            return done(null, user); // verify
+        });
     }
 ));
 

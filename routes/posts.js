@@ -23,7 +23,7 @@ exports.create = function(req, res){
 		success: false,
 		errfor: {}
 	};
-	
+
 	workflow.on('validate', function(){
 		if(title.length === 0)
 			workflow.outcome.errfor.title = '這是必填欄位';
@@ -34,6 +34,8 @@ exports.create = function(req, res){
 		// if has error, response error
 		if(Object.keys(workflow.outcome.errfor).length !== 0)
 			return workflow.emit('response');
+
+		workflow.outcome.success = true;
 
 		workflow.emit('savePost');
 	})
@@ -51,4 +53,6 @@ exports.create = function(req, res){
 	workflow.on('response', function(){
 		res.send(workflow.outcome);
 	});
+
+	workflow.emit('validate');
 };
