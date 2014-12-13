@@ -13,6 +13,7 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var posts = require('./routes/posts');
+var paypal = require('./routes/paypal')
 
 var app = express();
 
@@ -29,7 +30,7 @@ var postSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String,
     content: String,
-    //wchars: { type: Number, default: 0 }
+    wchars: { type: Number, default: 0 }
 });
 
 var userSchema = new mongoose.Schema({
@@ -44,12 +45,11 @@ postSchema.index( { title: 1 } );
 postSchema.index( { title: "text" } );
 postSchema.index( { content: "text" } );
 
-//postSchema.plugin(require('./schema/countPlugin'));
+postSchema.plugin(require('./schema/countPlugin'));
 
-/*postSchema.methods.sync = function() {
+postSchema.methods.sync = function() {
     console.log('sync');
 }
-*/
 
 app.db = {
     model: {
@@ -114,6 +114,8 @@ app.use(function(req, res, next) {
 app.use('/', routes);
 app.use('/users', users);
 
+app.use(paypal);
+
 // middleware stophere if without next
 /*app.get('/1/post', function(req, res, next) {
     console.log('stop here');
@@ -132,6 +134,9 @@ app.get('/auth/facebook/callback',
                                         failureRedirect: '/login/fail'}
     )
 );
+
+/** PayPal APIs */
+app.put('/1/post/:postId/pay');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
