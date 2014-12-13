@@ -172,11 +172,13 @@ app.PurchasePost = Backbone.Model.extend({
         this.purchase.set('id', postId);
         this.purchase.save(this.model.attributes, {
           success: function(model, response, options) {
-            $.notify('訂購成功。等候付款！');
+            //$.notify('訂購成功。等候付款！');
+            alert('訂購成功。等候付款！');
             self.model.fetch();
           },
           error: function(model, response, options) {
-            $.notify('失敗')
+            //$.notify('失敗')
+            alert('失敗')
           }
         });
     }

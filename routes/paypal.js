@@ -19,12 +19,34 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	var workflow = new events.EventEmitter();
 	var postId = req.params.postId;
 	var posts = req.app.db.model.Post;
+	var paymentId = ;
+	var payerId = ;
 
 	workflow.outcome = {
 		success: false
 	};
 
 	workflow.on('validate', function(){
+		paypal_api.configure(config_opts);
+	};
+
+	workflow.on('excutePayment', function(){
+		paaypa_api.configure(config_opts);
+
+		var excute_payment_json = {
+			payer_id: payerId
+		};
+
+		paypal_api.payment.excute(paymentId, excute_payment_json, function(err, payment){
+			if(err){
+				console.log(err);
+			}
+
+			if(payment){
+				console.log(payment)
+			}
+		});
+
 		workflow.emit('createPayment');
 	});
 
@@ -41,7 +63,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 					currency: 'TWD',
 					total: 99
 				},
-				description: '購買教學文章'
+				description: '購買測試文章'
 			}],
 			redirect_urls: {
 				// http://localhost:3000/1/post/
@@ -52,25 +74,31 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 
 		paypal_api.payment.create(create_payment_json, function(err, payment){
 			if(err){
-				console.log(err);
+				workflow.err = err;
+				return workfolw.emit('response');
 			}
 
-			if(payment){
-				console.log("Create Payment Response");
-				console.log(payment);
+			if(!payment){
+				return workflow.emit('response');
 			}
 
-			var order = {
-				userId: req.user._id,
-				paypal: payment
-			};
+			workflow.payment = payment;
+			workflow.emit('updatePost');
+		});
+	});
 
-			posts.findByIdAndUpdate(postId, { $addToSet: { orders: order } }, function(err, post){
-				workflow.outcome.success = true;
-				workflow.outcome.data = post;
+	workflow.on('updatePost', function(){
+		var order = {
+			userId: res.user._id,
+			paypal: workflow.payment
+		};
 
-				workflow.emit('response');
-			});
+		posts
+		.findByIdAndUpdate(postId, { $addToSet: { orders: order} }, function(err, post){
+			workflow.outcome.success = true;
+			workflow.outcome.data = post;
+
+			workflow.emit('response');
 		});
 	});
 
@@ -82,3 +110,6 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 });
 
 module.exports = router;
+
+
+

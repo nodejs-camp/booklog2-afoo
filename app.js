@@ -37,6 +37,9 @@ var postSchema = new mongoose.Schema({
         userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         paypal: { type: Object, select: false }
     }],
+    customers: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    }]
 });
 
 var userSchema = new mongoose.Schema({
@@ -87,6 +90,10 @@ app.use(passport.session());
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
+
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+})
 
 passport.use(new FacebookStrategy({
     clientID: '645016182285791',
