@@ -30,7 +30,14 @@ var postSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String,
     content: String,
-    wchars: { type: Number, default: 0 }
+    wchars: { type: Number, default: 0 },
+    orders: [{
+        id:
+        create_time:
+        state:
+        update_time:
+        links:
+    }]
 });
 
 var userSchema = new mongoose.Schema({
@@ -40,6 +47,8 @@ var userSchema = new mongoose.Schema({
     timeCreated: { type: Date, default: Date.now, select: false },
     facebook: { type: Object, select: false }
 });
+
+
 
 postSchema.index( { title: 1 } );
 postSchema.index( { title: "text" } );
