@@ -32,20 +32,9 @@ var postSchema = new mongoose.Schema({
     content: String,
     wchars: { type: Number, default: 0 },
     orders: [{
-        id: String,
-        create_time: Date,
-        state: String, 
-        update_time: Date,
-        links: [{
-            href : "https://api.sandbox.paypal.com/v1/payments/payment/PAY-2XR800907F429382MKEBWOSA",
-            rel : "self",
-            method : "GET"
-        }, {
-            href : "https://api.sandbox.paypal.com/v1/payments/payment/PAY-2XR800907F429382MKEBWOSA/execute",
-            rel : "update",
-            method : "POST"
-        }]
-    }]
+        userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        paypal: { type: Object, select: false }
+    }],
 });
 
 var userSchema = new mongoose.Schema({
