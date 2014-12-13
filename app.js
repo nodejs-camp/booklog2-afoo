@@ -6,8 +6,12 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
 
-/** call mongoose from node_module **/
+// call mongoose from node_module
 var mongoose = require('mongoose');
+
+// use passport & FB api
+var passport = require('passport'),
+        FacebookStrategy = require('passport-facebook').Strategy;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -51,16 +55,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user, done){
+    done(null, user);
+});
+
+passport.deserializeUser(function(obj, done){
+    done(null, obj);
+});
+
+passport.use(new FacebookStrategy({
+    clientID: '645016182285791',
+    clientSecret: '8bd109bfa17563368a9c923a73f9d3b7',
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    },
+    function(accessToken, refreshToken, profile, done){
+        return done(null, profile);
+    }
+));
+
 app.use('/', routes);
 app.use('/users', users);
 
-app.get('/1/post', function(req, res, next){
-    console.log('wait!');
-    next();
-});
-
+// REST APIs
 app.get('/1/post', posts.list);
 app.post('/1/post', posts.create);
+
+// Pages
+app.get('/login', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { successRedirect: '/',
+                                        failureRedirect: '/login/fail' }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
