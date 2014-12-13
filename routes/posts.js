@@ -19,6 +19,9 @@ exports.create = function(req, res){
 	var title = req.body.title;
 	var content = req.body.content;
 
+// who is user
+console.log('USER: ' + req.user);
+
 	workflow.outcome = {
 		success: false,
 		errfor: {}
