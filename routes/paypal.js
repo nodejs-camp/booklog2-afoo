@@ -15,7 +15,7 @@ var config_opts = {
 	'client_secret': 'EGWUYRAuWXbs5EdtM9cMhNol6bsmaagGorBI0bVQp3g5-n8hdMZKEQ6SzTwZ'
 };
 
-router.put('./1/post/:postId/pay', function(req, res, next){
+router.put('/1/post/:postId/pay', function(req, res, next){
 	var workflow = new events.EventEmitter();
 	var postId = req.params.postId;
 	var posts = req.app.db.model.Post;
@@ -39,9 +39,9 @@ router.put('./1/post/:postId/pay', function(req, res, next){
 			transctions: [{
 				amount: {
 					currency: 'TWD',
-					total: 99,
+					total: 99
 				},
-			description: '購買教學文章'
+				description: '購買教學文章'
 			}],
 			redirect_urls: {
 				// http://localhost:3000/1/post/
@@ -70,7 +70,7 @@ router.put('./1/post/:postId/pay', function(req, res, next){
 				workflow.outcome.data = post;
 
 				workflow.emit('response');
-			})
+			});
 		});
 	});
 
