@@ -46,7 +46,7 @@ block content
           input.form-control#title(name='title', type='text')
           label.has-error.control-label.pull-right <%= errfor.title %>
         .form-group(class!='<%= errfor.content ? "has-error" : "" %>')
-          label.control-label(for='subject') Content
+          label.control-label(for='content') Content
           textarea.form-control#content(name='content')
           label.has-error.control-label.pull-right <%= errfor.content %>
         .form-group
