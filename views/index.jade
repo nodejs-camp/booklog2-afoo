@@ -29,8 +29,9 @@ block content
       <% _.each(posts, function(post) { %>
       .well(style='margin-top: 20px;')
         h1 <%= post.title %>
-        
-        p  content: <%= post.content %>
+        h2 <%= post.userId.displayname %>
+        p words: <%= post.wachrs %> 
+        p content: <%= post.content %>
       <% }); %>
 
     script(type='text/template', id='tmpl-results')
