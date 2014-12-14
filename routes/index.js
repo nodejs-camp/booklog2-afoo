@@ -2,13 +2,13 @@ var express = require('express');
 var router = express.Router();
 
 // must login
-/*router.get('/', function(req, res, next) {
+router.get('/', function(req, res, next) {
  	if (req.isAuthenticated()) {
 		next();
 	} else {
 		res.redirect('/login');
 	}
-});*/
+});
 
 /* GET home page. */
 router.get('/', function(req, res) {

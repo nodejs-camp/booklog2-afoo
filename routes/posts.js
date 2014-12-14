@@ -1,10 +1,12 @@
 var events = require('events');
 
 exports.list = function(req, res){
+	//var workflow = new events.EventEmitter();
 	var model = req.app.db.model.Post;
 
 	model
-	.find({})
+	.find()
+	.populate('userId')
 	.exec(function(err, posts){
 		res.send({
 			posts: posts
@@ -19,6 +21,7 @@ exports.listByTag = function(req, res){
 
 	model
 	.find({title: tag})
+	.populate('userId')
 	.exec(function(err, posts){
 		res.send({
 			posts: posts
@@ -33,8 +36,6 @@ exports.create = function(req, res){
 	var title = req.body.title;
 	var content = req.body.content;
 
-// who is user
-//console.log('USER: ' + req.user);
 	var userId = req.user._id;
 
 	workflow.outcome = {

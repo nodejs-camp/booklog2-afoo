@@ -33,6 +33,7 @@ db.once('open', function callback () {
 
 // design post data structure
 var postSchema = new mongoose.Schema({
+    //reference app.db.model.User
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     title: String,
     content: String
@@ -51,7 +52,7 @@ var userSchema = new mongoose.Schema({
 app.db = {
     model: {
         Post: mongoose.model('post', postSchema),
-        User: mongoose.model('Usesr', userSchema)
+        User: mongoose.model('User', userSchema)
     }
 };
 
@@ -87,7 +88,7 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://localhost:3000/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done){
-        app.db.model.User.findOne({"facebook._jason.id": profile.id}, function(err, user){
+       app.db.model.User.findOne({"facebook._json.id": profile._json.id}, function(err, user) {
             if(!user){
                 var obj = {
                     username: profile.username,
