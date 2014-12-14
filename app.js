@@ -33,6 +33,7 @@ db.once('open', function callback () {
 
 // design post data structure
 var postSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     title: String,
     content: String
 });
@@ -81,12 +82,12 @@ passport.deserializeUser(function(obj, done){
 });
 
 passport.use(new FacebookStrategy({
-    clientID: '645016182285791',
-    clientSecret: '8bd109bfa17563368a9c923a73f9d3b7',
+    clientID: '410866279063864',
+    clientSecret: '3887b8914b81d0e778d3b9af10775fb6',
     callbackURL: "http://localhost:3000/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done){
-        app.db.users.findOne({"facebook._jason.id": profile.id}, function(err, user){
+        app.db.model.User.findOne({"facebook._jason.id": profile.id}, function(err, user){
             if(!user){
                 var obj = {
                     username: profile.username,
@@ -95,7 +96,7 @@ passport.use(new FacebookStrategy({
                     facebook: profile
                 };
 
-                var doc = new app.db.users(obj);
+                var doc = new app.db.model.User(obj);
                 doc.save();
 
                 user = doc;

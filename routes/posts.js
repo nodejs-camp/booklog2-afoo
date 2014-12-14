@@ -34,7 +34,8 @@ exports.create = function(req, res){
 	var content = req.body.content;
 
 // who is user
-console.log('USER: ' + req.user);
+//console.log('USER: ' + req.user);
+	var userId = req.user._id;
 
 	workflow.outcome = {
 		success: false,
@@ -59,6 +60,7 @@ console.log('USER: ' + req.user);
 
 	workflow.on('savePost', function(){
 		var post = new model({
+			userId: userId,
 			title: title,
 			content: content
 		});
