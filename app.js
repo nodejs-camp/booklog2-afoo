@@ -52,11 +52,11 @@ postSchema.index({ title: 1 });
 postSchema.index({ title: "text" });
 postSchema.index({ content: "text" });
 
-//postSchema.plugin(require('./schema/countPlugin'));
+postSchema.plugin(require('./schema/countPlugin'));
 
-/*postSchema.method.sync = function(){
+postSchema.method.sync = function(){
     console.log('sync');
-}*/
+}
 
 // set a db model? 
 app.db = {
