@@ -3,5 +3,5 @@ module.exports = exports = function countPlugin (schema) {
 		var ccc = require('cccount');
 
 		return ccc.wcharCount(content);
-	}
+	};
 }
