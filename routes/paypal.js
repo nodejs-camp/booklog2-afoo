@@ -6,6 +6,7 @@ var events = require('events');
 var express = require('express');
 var router = express.Router();
 
+// Paypal
 var paypal_api = require('paypal-rest-sdk');
 
 var config_opts = {
@@ -26,26 +27,6 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	};
 
 	workflow.on('validate', function(){
-		paypal_api.configure(config_opts);
-	});
-
-	workflow.on('excutePayment', function(){
-		paaypa_api.configure(config_opts);
-
-		var excute_payment_json = {
-			payer_id: payerId
-		};
-
-		paypal_api.payment.excute(paymentId, excute_payment_json, function(err, payment){
-			if(err){
-				console.log(err);
-			}
-
-			if(payment){
-				console.log(payment)
-			}
-		});
-
 		workflow.emit('createPayment');
 	});
 
@@ -53,51 +34,33 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 		paypal_api.configure(config_opts);
 
 		var create_payment_json = {
-			intent: 'sale',
-			payer: {
-				'payment_method': 'paypal'
-			},
-			transctions: [{
-				amount: {
-					currency: 'TWD',
-					total: 99
+				intent: 'sale',
+				payer: {
+					'payment_method': 'paypal'
 				},
-				description: '購買測試文章'
-			}],
-			redirect_urls: {
-				// http://localhost:3000/1/post/
-				return_url: 'http://localhost:3000/1/post' + postId + '/paid',
-				cancel_url: 'http://localhost:3000/1/post' + postId + '/cancel' 
-			}
-		},
+				transactions: [{
+					amount: {
+						currency: 'TWD',
+						total: 99
+					},
+					description: '購買測試文章'
+				}],
+				redirect_urls: {
+					// http://localhost:3000/1/post/
+					return_url: 'http://localhost:3000/1/post' + postId + '/paid',
+					cancel_url: 'http://localhost:3000/1/post' + postId + '/cancel' 
+				}
+		};
 
 		paypal_api.payment.create(create_payment_json, function(err, payment){
 			if(err){
-				workflow.err = err;
-				return workfolw.emit('response');
+				console.log(err);
 			}
 
-			if(!payment){
-				return workflow.emit('response');
+			if(payment){
+				console.log('Create Payment Response');
+				console.log(payment);
 			}
-
-			workflow.payment = payment;
-			workflow.emit('updatePost');
-		});
-	});
-
-	workflow.on('updatePost', function(){
-		var order = {
-			userId: res.user._id,
-			paypal: workflow.payment
-		};
-
-		posts
-		.findByIdAndUpdate(postId, { $addToSet: { orders: order} }, function(err, post){
-			workflow.outcome.success = true;
-			workflow.outcome.data = post;
-
-			workflow.emit('response');
 		});
 	});
 

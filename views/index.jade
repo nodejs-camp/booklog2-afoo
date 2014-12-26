@@ -30,7 +30,8 @@ block content
       .well(style='margin-top: 20px;')
         h1 <%= post.title %>
         h5 Author: <%= post.userId.displayName %>
-        p characters number: <%= post.wchars %>
+        p words: <%= post.wchars %>
+        p content: <%= post.content %>
       <% }); %>
 
     script(type='text/template', id='tmpl-results')

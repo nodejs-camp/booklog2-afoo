@@ -19,6 +19,7 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var posts = require('./routes/posts');
+var paypal = require('./routes/paypal');
 
 var app = express();
 
@@ -36,7 +37,14 @@ var postSchema = new mongoose.Schema({
     //reference app.db.model.User
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     title: String,
-    content: String
+    content: String,
+    wchars: { type: Number, default: 0 },
+    
+    // Paypal payment
+    orders: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        paypal: { type: Object, select: false }
+    }]
 });
 
 // design user data structure
@@ -127,6 +135,9 @@ app.use(function(req, res, next){
 app.use('/', routes);
 app.use('/users', users);
 
+// Paypal
+app.use(paypal);
+
 // REST APIs
 app.get('/1/post', posts.list);
 app.get('/1/post/:tag', posts.listByTag);
@@ -137,6 +148,9 @@ app.get('/login', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/',
                                         failureRedirect: '/login/fail' }));
+
+// Paypal APIs
+app.put('/1/post/:postId/pay');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
