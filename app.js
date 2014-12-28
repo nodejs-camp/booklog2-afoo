@@ -144,10 +144,13 @@ app.get('/1/post/:tag', posts.listByTag);
 app.post('/1/post', posts.create);
 
 // Pages
+app.get('/login');
+/*
 app.get('/login', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/',
                                         failureRedirect: '/login/fail' }));
+*/
 
 // Paypal APIs
 app.put('/1/post/:postId/pay');
