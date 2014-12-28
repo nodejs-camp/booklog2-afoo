@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 // must login
+/*
 router.get('/', function(req, res, next) {
  	if (req.isAuthenticated()) {
 		next();
@@ -9,6 +10,7 @@ router.get('/', function(req, res, next) {
 		res.redirect('/login');
 	}
 });
+*/
 
 /* GET home page. */
 router.get('/', function(req, res) {
