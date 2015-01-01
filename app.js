@@ -132,6 +132,7 @@ app.use(function(req, res, next){
     next();
 })
 
+// homepage
 app.use('/', routes);
 app.use('/users', users);
 
