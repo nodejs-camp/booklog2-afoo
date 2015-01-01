@@ -1,4 +1,4 @@
-e/**
+/**
  * SETUP
  **/
   var app = app || {};
