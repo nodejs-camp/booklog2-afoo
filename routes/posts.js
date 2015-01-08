@@ -5,13 +5,12 @@ exports.list = function(req, res){
 	var model = req.app.db.model.Post;
 
 	model
-	.find()
-	.populate('userId')
-	/*.aggregate([
+	//.find()
+	//.populate('userId')
+	.aggregate([
 	{
 		$project: { _id: 1, title: 1, content: 1, userId: 1}
 	}])
-	*/
 	.exec(function(err, posts){
 		req.app.db.model.Post.populate(posts, {path: 'userId'}, function(){
 			
@@ -33,8 +32,8 @@ exports.listByTag = function(req, res){
 	var tag = req.params.tag;
 
 	model
-	//.find({title: tag})
-	.find({ $text: { $search: tag } })
+	.find({title: tag})
+	//.find({ $text: { $search: tag } })
 	.populate('userId')
 	.exec(function(err, posts){
 		res.send({
