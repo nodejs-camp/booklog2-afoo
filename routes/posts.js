@@ -36,6 +36,7 @@ exports.listByTag = function(req, res){
 	.find({ $text: { $search: tag } })
 	.populate('userId')
 	.exec(function(err, posts){
+console.log('i got here!');
 		res.send({
 			posts: posts
 		});
@@ -67,8 +68,6 @@ exports.create = function(req, res){
 		if(Object.keys(workflow.outcome.errfor).length !== 0)
 			return workflow.emit('response');
 
-		workflow.outcome.success = true;
-
 		workflow.emit('savePost');
 	})
 
@@ -79,6 +78,8 @@ exports.create = function(req, res){
 			content: content
 		});
 		post.save();
+
+		workflow.outcome.success = true;
 
 		workflow.emit('response');
 	});
