@@ -36,7 +36,11 @@ exports.listByTag = function(req, res){
 	.find({ $text: { $search: tag } })
 	.populate('userId')
 	.exec(function(err, posts){
-console.log('i got here!');
+
+		for(i=0; i<posts.length; i++){
+			posts[i].wchars = req.app.db.model.Post.count(posts[i].content);
+		}
+		
 		res.send({
 			posts: posts
 		});
