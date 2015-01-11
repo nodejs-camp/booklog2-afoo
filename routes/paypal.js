@@ -72,7 +72,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 			posts
 			.fundByIdAndUpdate(postId, { $addToSet: { orders: order } }, function(err, post){
 				workflow.outcome.success = true;
-				worlflow.outcome.date = post;
+				worlflow.outcome.data = post;
 
 				workflow.emit('respones');
 			});
