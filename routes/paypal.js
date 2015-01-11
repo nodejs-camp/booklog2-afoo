@@ -57,16 +57,17 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 		paypal_api.payment.create(create_payment_json, function(err, payment){
 			if(err){
 				console.log(err);
-				//workflow.err = err;
-				//return workflow.emit('response');
+				workflow.err = err;
+				return workflow.emit('response');
 			}
 
 			if(payment){
 				console.log('Create Payment Response');
 				console.log(payment);
-				//return workflow.emit('response');
+				return workflow.emit('response');
 			}
 
+			/*
 			var order = {
 				userId: req.user._id,
 				paypal: payment
@@ -79,6 +80,25 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 
 				workflow.emit('response');
 			});
+			*/
+
+			workflow.payment = payment;
+			workflow.emit('updatePost');
+		});
+	});
+	
+	workflow.on('updatePost', function(){
+		var order = {
+			userId = req.user._id;
+			paypal = workflow.payment;
+		};
+
+		posts
+		.fundByIdAndUpdate(postId, { $addToSet: { orders: order } }, funciton(err, post){
+			workflow.outcome.success = true;
+			workflow.outcome.data = post;
+
+			workflow.emit('response');
 		});
 	});
 

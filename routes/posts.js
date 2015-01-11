@@ -9,7 +9,7 @@ exports.list = function(req, res){
 	//.populate('userId')
 	.aggregate([
 	{
-		$project: { _id: 1, title: 1, content: 1, userId: 1}
+		$project: { _id: 1, title: 1, content: 1, userId: 1, order: 1 }
 	}])
 	.exec(function(err, posts){
 		req.app.db.model.Post.populate(posts, {path: 'userId'}, function(){
