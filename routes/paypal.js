@@ -47,20 +47,35 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 				}],
 				redirect_urls: {
 					// http://localhost:3000/1/post/
-					return_url: 'http://localhost:3000/1/post' + postId + '/paid',
-					cancel_url: 'http://localhost:3000/1/post' + postId + '/cancel' 
+					return_url: 'http://www.alwaysladylove.com/1/post' + postId + '/paid',
+					cancel_url: 'http://www.alwaysladylove.com/1/post' + postId + '/cancel' 
 				}
 		};
 
 		paypal_api.payment.create(create_payment_json, function(err, payment){
 			if(err){
 				console.log(err);
+				//workflow.err = err;
+				//return workflow.emit('response');
 			}
 
 			if(payment){
 				console.log('Create Payment Response');
 				console.log(payment);
 			}
+
+			var order = {
+				userId: req.user._id,
+				paypal: payment
+			};
+
+			posts
+			.fundByIdAndUpdate(postId, { $addToSet: { orders: order } }, function(err, post){
+				workflow.outcome.success = true;
+				worlflow.outcome.date = post;
+
+				workflow.emit('respones');
+			});
 		});
 	});
 
