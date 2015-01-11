@@ -20,6 +20,8 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	var workflow = new events.EventEmitter();
 	var postId = req.params.postId;
 	var posts = req.app.db.model.Post;
+	//var paymentId = ;
+	//var payerId = ;
 
 
 	workflow.outcome = {
@@ -62,6 +64,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 			if(payment){
 				console.log('Create Payment Response');
 				console.log(payment);
+				//return workflow.emit('response');
 			}
 
 			var order = {
@@ -74,7 +77,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 				workflow.outcome.success = true;
 				worlflow.outcome.data = post;
 
-				workflow.emit('respones');
+				workflow.emit('response');
 			});
 		});
 	});
