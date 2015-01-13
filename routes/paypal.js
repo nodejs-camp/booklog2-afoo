@@ -89,8 +89,8 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	
 	workflow.on('updatePost', function(){
 		var order = {
-			userId = req.user._id;
-			paypal = workflow.payment;
+			userId: req.user._id,
+			paypal: workflow.payment
 		};
 
 		posts
