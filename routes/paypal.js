@@ -94,7 +94,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 		};
 
 		posts
-		.fundByIdAndUpdate(postId, { $addToSet: { orders: order } }, funciton(err, post){
+		.findByIdAndUpdate(postId, { $addToSet: { orders: order } }, funciton(err, post){
 			workflow.outcome.success = true;
 			workflow.outcome.data = post;
 
