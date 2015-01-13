@@ -49,8 +49,8 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 				}],
 				redirect_urls: {
 					// http://localhost:3000/1/post/
-					return_url: 'http://www.alwaysladylove.com/1/post' + postId + '/paid',
-					cancel_url: 'http://www.alwaysladylove.com/1/post' + postId + '/cancel' 
+					return_url: 'http://alwaysladylove.com/1/post' + postId + '/paid',
+					cancel_url: 'http://alwaysladylove.com/1/post' + postId + '/cancel' 
 				}
 		};
 

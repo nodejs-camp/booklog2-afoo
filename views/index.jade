@@ -34,7 +34,7 @@ block content
         <% if (post.length === 0) { %>
         button.btn.btn-default(data-purchase-for!='<%= post._id %>') 購買全文
         <% } else { %>
-        a.btn.btn-danger(href!='<%= post.oreders[0].paypal.links[1].href %>', target= '_bank') 線上付款
+        a.btn.btn-danger(href!='<%= post.orders[0].paypal.links[1].href %>', target='_bank') 線上付款
         <% } %>
         p content: <%= post.content %>
       <% }); %>
