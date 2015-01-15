@@ -9,13 +9,21 @@ exports.list = function(req, res){
 	//.populate('userId')
 	.aggregate([
 	{
-		$project: { _id: 1, title: 1, content: 1, userId: 1, order: 1 }
+		$project: { _id: 1, title: 1, content: 1, userId: 1, order: 1, customers: 1 }
 	}])
 	.exec(function(err, posts){
 		req.app.db.model.Post.populate(posts, {path: 'userId'}, function(){
 			
 			for(i=0; i<posts.length; i++){
+				// 1.
 				posts[i].wchars = req.app.db.model.Post.count(posts[i].content);
+
+				// 2.
+				var uid;
+				for (j=0; j<posts[i].customers.length; j++) {
+					uid = '' + posts[i].customers[j];
+					if (uid === req.user._id) posts[i].granted = true;
+				}
 			}
 
 			res.send({

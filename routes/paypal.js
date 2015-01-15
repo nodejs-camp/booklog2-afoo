@@ -20,8 +20,8 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	var workflow = new events.EventEmitter();
 	var postId = req.params.postId;
 	var posts = req.app.db.model.Post;
-	//var paymentId = ;
-	//var payerId = ;
+	var payerId = req.query.PayerID;
+	var paymentId;
 
 
 	workflow.outcome = {
@@ -29,75 +29,45 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 	};
 
 	workflow.on('validate', function(){
-		workflow.emit('createPayment');
+		posts
+		.findOne({ _id: postId})
+		.exec(function(err, post){
+			if (err) {
+				workflow.outcome.data = { error_description: err };
+				return workflow.emit('response');
+			}
+
+			if (!post) {
+				// product not exist
+				workflow.outcome.data = { error_description: product does not exist };
+				return workflow.emit('response');
+			}
+
+			workflow.paymentId = post.order[0].paypal.id;
+
+			workfolw.emit('executePayment');
+		});
 	});
 
-	workflow.on('createPayment', function(){
+	workflow.on('executePayment', function(){
 		paypal_api.configure(config_opts);
 
-		var create_payment_json = {
-				intent: 'sale',
-				payer: {
-					'payment_method': 'paypal'
-				},
-				transactions: [{
-					amount: {
-						currency: 'TWD',
-						total: 99
-					},
-					description: '購買測試文章'
-				}],
-				redirect_urls: {
-					// http://localhost:3000/1/post/
-					return_url: 'http://alwaysladylove.com/1/post' + postId + '/paid',
-					cancel_url: 'http://alwaysladylove.com/1/post' + postId + '/cancel' 
-				}
-		};
-
-		paypal_api.payment.create(create_payment_json, function(err, payment){
-			if(err){
-				console.log(err);
-				workflow.err = err;
-				return workflow.emit('response');
+		paypal_api.payment.execute(workflow.paymentId, { payer_id: payerId}, function(err, payment){
+			if(err) {
+				workflow.outcome.data = { error_description: err };
+				return workflow.outcome.emit('response');
 			}
 
-			if(payment){
-				console.log('Create Payment Response');
-				console.log(payment);
-				return workflow.emit('response');
-			}
-
-			/*
-			var order = {
-				userId: req.user._id,
-				paypal: payment
-			};
-
-			posts
-			.fundByIdAndUpdate(postId, { $addToSet: { orders: order } }, function(err, post){
-				workflow.outcome.success = true;
-				worlflow.outcome.data = post;
-
-				workflow.emit('response');
-			});
-			*/
-
-			workflow.payment = payment;
-			workflow.emit('updatePost');
+			workflow.outcome.data = payment;
+			workflow.outcome.emit('updatePost');
 		});
 	});
 	
 	workflow.on('updatePost', function(){
-		var order = {
-			userId: req.user._id,
-			paypal: workflow.payment
-		};
 
 		posts
-		.findByIdAndUpdate(postId, { $addToSet: { orders: order } }, function(err, post){
+		.findByIdAndUpdate(postId, { $addToSet: { customers: req.user._id } }, function(err, post){
 			workflow.outcome.success = true;
-			workflow.outcome.data = post;
-
 			workflow.emit('response');
 		});
 	});
