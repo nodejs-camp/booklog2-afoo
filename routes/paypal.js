@@ -39,7 +39,7 @@ router.put('/1/post/:postId/pay', function(req, res, next){
 
 			if (!post) {
 				// product not exist
-				workflow.outcome.data = { error_description: product does not exist };
+				workflow.outcome.data = { error_description: product not exist };
 				return workflow.emit('response');
 			}
 
