@@ -18,12 +18,12 @@ exports.list = function(req, res){
 				// 1.
 				posts[i].wchars = req.app.db.model.Post.count(posts[i].content);
 
-				/*/ 2.
+				// 2.
 				var uid;
 				for (j=0; j<posts[i].customers.length; j++) {
 					uid = '' + posts[i].customers[j];
 					if (uid === req.user._id) posts[i].granted = true;
-				}*/
+				}
 			}
 
 			res.send({
