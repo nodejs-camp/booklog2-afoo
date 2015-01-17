@@ -31,7 +31,7 @@ block content
         h1 <%= post.title %>
         h5 Author: <%= post.userId.displayName %>
         p words: <%= post.wchars %>
-        <% if (post.length === 0) { %>
+        <% if (post.orders.length === 0) { %>
         button.btn.btn-default(data-purchase-for!='<%= post._id %>') 購買全文
         <% } %>
         p content: <%= post.content %>
