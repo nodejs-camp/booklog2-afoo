@@ -154,7 +154,7 @@ app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/',
                                         failureRedirect: '/login/fail' }));
 
-app.get('/logout', function(res, req, next){
+app.get('/logout', function(req, res, next){
     res.alert("Please don't go!");
     next();
 });
