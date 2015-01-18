@@ -154,7 +154,7 @@ app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/',
                                         failureRedirect: '/login/fail' }));
 
-app.get('/logout', { successRedirect: '/login' });
+app.get('/logout', alert("Please don't go!"));
 
 // Paypal APIs
 app.put('/1/post/:postId/pay');
