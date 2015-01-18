@@ -155,7 +155,7 @@ app.get('/auth/facebook/callback',
                                         failureRedirect: '/login/fail' }));
 
 app.get('/logout', function(req, res){
-    res.render('/', {info: req.flash("Please don't go!")});
+    res.redirect('/');
 });
 
 // Paypal APIs
